@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation'
 import DeployButton from '../components/DeployButton'
 import AuthButton from '../components/AuthButton'
 import { createClient } from '@/utils/supabase/server'
@@ -7,6 +8,18 @@ import Header from '@/components/Header'
 import Link from 'next/link'
 
 export default async function Index() {
+  const supabase = createClient()
+
+  // Check if the user is logged in
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  if (user) {
+    redirect('/protected')
+    return null
+  }
+
   const canInitSupabaseClient = () => {
     // This function is just for the interactive tutorial.
     // Feel free to remove it once you have Supabase connected.
@@ -36,7 +49,6 @@ export default async function Index() {
           <p>
             <a
               href="/login"
-              target="_blank"
               className="font-semibold hover:underline"
               rel="noreferrer"
             >
