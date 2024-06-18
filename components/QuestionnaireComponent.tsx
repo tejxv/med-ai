@@ -1,103 +1,136 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 
 interface QuestionnaireComponentProps {
-  onSubmit: (responses: { question: string; answer: string }[]) => void
+  onSubmit: (responses: {
+    user_id: string
+    doc_id: string[]
+    qna: {
+      category: string
+      questions: { question: string; answer: string }[]
+    }[]
+  }) => void
 }
 
 const QuestionnaireComponent: React.FC<QuestionnaireComponentProps> = ({
   onSubmit,
 }) => {
-  const questions = [
+  const [userId, setUserId] = useState('')
+  const [docId, setDocId] = useState('')
+  const categories = [
     {
-      question: 'What brings you in today?',
-      options: ['Routine check-up', 'New symptoms', 'Follow-up visit', 'Other'],
-    },
-    {
-      question: 'Do you have any new symptoms or health concerns?',
-      options: ['Yes', 'No', 'Unsure', 'Prefer not to say'],
-    },
-    {
-      question: 'How would you rate your overall health?',
-      options: ['Excellent', 'Good', 'Fair', 'Poor'],
-    },
-    {
-      question: 'Are you experiencing any pain or discomfort?',
-      options: ['Yes, mild', 'Yes, moderate', 'Yes, severe', 'No'],
-    },
-    {
-      question: 'Have you had any changes in your weight recently?',
-      options: [
-        'Yes, gained weight',
-        'Yes, lost weight',
-        'No change',
-        'Unsure',
+      category: 'General Questions',
+      questions: [
+        { question: 'What are your main symptoms?' },
+        { question: 'How long have you been experiencing these symptoms?' },
+        {
+          question: 'Have you experienced these symptoms before? If yes, when?',
+        },
+        { question: 'On a scale of 1 to 10, how severe are your symptoms?' },
+        {
+          question:
+            'Have you recently experienced any significant changes in your health or lifestyle?',
+        },
       ],
     },
     {
-      question: 'Are you taking any medications or supplements?',
-      options: [
-        'Yes, prescription medications',
-        'Yes, over-the-counter medications',
-        'Yes, supplements',
-        'No',
+      category: 'Specific Symptoms',
+      questions: [
+        {
+          question:
+            'Do you have a fever? If yes, what is your current temperature?',
+        },
+        {
+          question:
+            'Are you experiencing any pain? If so, where is the pain located and what does it feel like (sharp, dull, throbbing, etc.)?',
+        },
+        {
+          question:
+            'Do you have any difficulty breathing or shortness of breath?',
+        },
+        {
+          question:
+            'Have you noticed any swelling, redness, or other changes in the affected area?',
+        },
+        { question: 'Do you have any rashes or unusual skin changes?' },
       ],
     },
     {
-      question: 'Do you have any allergies?',
-      options: [
-        'Yes, food allergies',
-        'Yes, medication allergies',
-        'Yes, environmental allergies',
-        'No',
+      category: 'Medical History',
+      questions: [
+        { question: 'Do you have any pre-existing medical conditions?' },
+        {
+          question:
+            'Are you currently taking any medications? If so, what are they?',
+        },
+        { question: 'Have you recently stopped taking any medications?' },
+        { question: 'Do you have any known allergies?' },
+        {
+          question: 'Have you had any recent surgeries or medical procedures?',
+        },
       ],
     },
     {
-      question: 'How is your diet and exercise routine?',
-      options: [
-        'Balanced diet and regular exercise',
-        'Balanced diet but no exercise',
-        'Poor diet but regular exercise',
-        'Poor diet and no exercise',
+      category: 'Lifestyle and Environment',
+      questions: [
+        { question: 'Have you been under any unusual stress recently?' },
+        { question: 'Have you been traveling recently? If so, where?' },
+        { question: 'Have you been in contact with anyone who is sick?' },
+        { question: 'Do you smoke, drink alcohol, or use recreational drugs?' },
+        {
+          question:
+            'Have there been any changes to your diet or exercise routine?',
+        },
       ],
     },
     {
-      question: 'Do you smoke, drink alcohol, or use any recreational drugs?',
-      options: [
-        'Yes, smoke',
-        'Yes, drink alcohol',
-        'Yes, use recreational drugs',
-        'No',
+      category: 'Family History',
+      questions: [
+        {
+          question:
+            'Do you have a family history of similar symptoms or conditions?',
+        },
+        { question: 'Are there any hereditary conditions in your family?' },
       ],
     },
     {
-      question:
-        'Is there a family history of any significant illnesses or conditions?',
-      options: [
-        'Yes, heart disease',
-        'Yes, diabetes',
-        'Yes, cancer',
-        'No significant family history',
+      category: 'Previous Treatments and Outcomes',
+      questions: [
+        {
+          question:
+            'Have you tried any over-the-counter medications or home remedies for your symptoms? If so, what were they and did they help?',
+        },
+        {
+          question:
+            'Have you visited a doctor or healthcare provider for these symptoms before? If yes, what was the diagnosis and treatment?',
+        },
+      ],
+    },
+    {
+      category: 'Follow-up and Monitoring',
+      questions: [
+        {
+          question:
+            'Are your symptoms getting better, worse, or staying the same?',
+        },
+        { question: 'Have you noticed any new symptoms developing?' },
       ],
     },
   ]
-
-  const textFieldQuestions = new Set([
-    'What brings you in today?',
-    'Do you have any new symptoms or health concerns?',
-    'Are you experiencing any pain or discomfort?',
-  ])
 
   const formRef = React.useRef(null)
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const formData = new FormData(formRef.current!)
-    const responses = questions.map((q, index) => ({
-      question: q.question,
-      answer: formData.get(`question-${index}`) as string,
+    const qna = categories.map((category) => ({
+      category: category.category,
+      questions: category.questions.map((q, index) => ({
+        question: q.question,
+        answer: formData.get(`${category.category}-${index}`) as string,
+      })),
     }))
-    onSubmit(responses)
+    onSubmit({ user_id: userId, doc_id: [docId], qna })
   }
 
   return (
@@ -106,55 +139,55 @@ const QuestionnaireComponent: React.FC<QuestionnaireComponentProps> = ({
       onSubmit={handleSubmit}
       className="flex flex-col py-10 gap-8"
     >
-      {questions.map((q, index) => (
-        <div key={index} className="flex flex-col gap-2">
-          <label className="text-md text-gray-600 pl-4 font-semibold">
-            {q.question}
-          </label>
-          <div className="relative">
-            {textFieldQuestions.has(q.question) ? (
-              <input
-                type="text"
-                name={`question-${index}`}
-                className="px-3 py-2.5 border bg-transparent bg-white w-full opacity-80 border-gray-200 hover:border-gray-300 dark:text-gray-300 outline-none dark:outline-gray-800 appearance-none transition-all shadow-sm dark:border-gray-800 dark:bg-gray-900 rounded-xl"
+      <div>Upload Report</div>
+      <div className="flex flex-col gap-2">
+        <label className="text-md text-gray-600 mt-4 pl-3.5 font-medium">
+          User ID
+        </label>
+        <input
+          type="text"
+          value={userId}
+          onChange={(e) => setUserId(e.target.value)}
+          className="px-3 py-2.5 border h-auto bg-transparent bg-white w-full opacity-80 border-gray-200 hover:border-gray-300 dark:text-gray-300 outline-none dark:hover:border-gray-700 appearance-none transition-all shadow-sm dark:border-gray-800 dark:bg-gray-900 rounded-xl"
+          required
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label className="text-md text-gray-600 mt-4 pl-3.5 font-medium">
+          Document ID
+        </label>
+        <input
+          type="text"
+          value={docId}
+          onChange={(e) => setDocId(e.target.value)}
+          className="px-3 py-2.5 border h-auto bg-transparent bg-white w-full opacity-80 border-gray-200 hover:border-gray-300 dark:text-gray-300 outline-none dark:hover:border-gray-700 appearance-none transition-all shadow-sm dark:border-gray-800 dark:bg-gray-900 rounded-xl"
+          required
+        />
+      </div>
+      {categories.map((category, catIndex) => (
+        <div key={catIndex}>
+          <h3 className="pb-4 pl-3.5 border-b border-gray-200 text-lg font-semibold">
+            {category.category}
+          </h3>
+          {category.questions.map((q, index) => (
+            <div key={index} className="flex flex-col gap-2">
+              <label className="text-md text-gray-600 mt-4 pl-3.5 font-medium">
+                {q.question}
+              </label>
+              <textarea
+                name={`${category.category}-${index}`}
+                className="px-3 py-2.5 border h-auto bg-transparent bg-white w-full opacity-80 border-gray-200 hover:border-gray-300 dark:text-gray-300 outline-none dark:hover:border-gray-700 appearance-none transition-all shadow-sm dark:border-gray-800 dark:bg-gray-900 rounded-xl resize-none overflow-hidden"
                 required
+                autoComplete="off"
+                rows={1}
+                onInput={(e) => {
+                  const target = e.target as HTMLTextAreaElement
+                  target.style.height = 'auto'
+                  target.style.height = `${target.scrollHeight + 2}px`
+                }}
               />
-            ) : (
-              <select
-                name={`question-${index}`}
-                className="px-3 py-2.5 cursor-pointer border bg-transparent bg-white w-full opacity-80 border-gray-200 hover:border-gray-300 dark:text-gray-300 outline-none dark:outline-gray-800 appearance-none transition-all shadow-sm dark:border-gray-800 dark:bg-gray-900 rounded-xl pr-10"
-                defaultValue=""
-                required
-              >
-                <option value="" className="appearance-none">
-                  <span>Choose your answer</span>
-                </option>
-                {q.options.map((option, i) => (
-                  <option key={i} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-            )}
-            <div className="absolute inset-y-0 right-2 flex items-center px-2 pointer-events-none">
-              {!textFieldQuestions.has(q.question) && (
-                <svg
-                  className="w-4 h-4 text-gray-400"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 9l-7 7-7-7"
-                  ></path>
-                </svg>
-              )}
             </div>
-          </div>
+          ))}
         </div>
       ))}
       <button
