@@ -13,7 +13,7 @@ export default function Questions() {
       <div className="py-20 px-10 animate-in">
         <main className="flex-1 flex flex-col gap-6">
           <h2 className="font-bold text-4xl mb-4">📋 Health Questionnaire</h2>
-          <QuestionnaireComponent onSubmit={handleSubmit} />
+          {/* <QuestionnaireComponent onSubmit={handleSubmit} /> */}
         </main>
       </div>
       <footer className="w-full border-t border-t-foreground/10 p-8 flex justify-center text-center text-xs">
