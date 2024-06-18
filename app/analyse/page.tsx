@@ -122,7 +122,7 @@ export default async function ProtectedPage() {
   // }
 
   const renderQuestions = (category: any) => {
-    return category.questions.map((question, index) => (
+    return category.questions.map((question: any, index: any) => (
       <div key={index}>
         <p className="font-medium pt-4 pb-1">{question.question}</p>
         {/* Add input field based on question type (optional) */}

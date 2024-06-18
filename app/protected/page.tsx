@@ -26,7 +26,7 @@ export default async function ProtectedPage() {
       <div className="animate-in flex-1 flex flex-col gap-20 opacity-0 max-w-4xl px-3">
         <main className="flex-1 flex flex-col gap-6">
           <Link
-            href="/questions"
+            href="/analyse"
             className="p-4 rounded-2xl ring-1 hover:ring-2 transition-all"
           >
             Take the{' '}
