@@ -52,6 +52,7 @@ export default function MedForm({ userId }: { userId: string }, docId: any) {
   const [followUpQuestions, setFollowUpQuestions] = useState([])
   const [initialQna, setInitialQna] = useState({})
   const [doctorMapping, setDoctorMapping] = useState(null)
+  const [showDoctorMapping, setShowDoctorMapping] = useState(false)
 
   const saveToSupabase = async ({
     user_id,
@@ -244,6 +245,7 @@ export default function MedForm({ userId }: { userId: string }, docId: any) {
           }),
         }
       )
+      // setShowDoctorMapping(true)
 
       if (!response.ok) {
         throw new Error("Failed to fetch doctor mapping")
@@ -265,35 +267,39 @@ export default function MedForm({ userId }: { userId: string }, docId: any) {
     <div className="pb-4">
       {status == "success" ? (
         <div
-          className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative"
+          className="report bg-green-100 border border-green-200 text-green-700 px-4 py-3 rounded-xl relative"
           role="alert"
         >
           <p className="font-base mb-6">Report has been generated!</p>
           <Markdown>{analysis}</Markdown>
           <button
             onClick={handleFetchDoctorMapping}
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+            className="mt-4 bg-blue-500 text-white px-4 py-3 w-full mb-1 rounded-xl font-semibold hover:bg-blue-600 transition-colors"
           >
-            Book Appointment
+            Your appointment has been booked.
           </button>
           {doctorMapping && (
-            <div className="mt-4 bg-white p-4 rounded border border-gray-200">
+            <div className="mt-4 mb-2 bg-white shadow-md p-4 rounded-xl border border-gray-300">
               <h4 className=" text-sm mb-2">
                 A doctor has been successfully appointed to you –
               </h4>
               <p className="font-bold text-2xl mb-2">
                 Name: Dr. {doctorMapping.doctor_mapped.Doctor_name}
               </p>
-              <p>📧 Email: {doctorMapping.doctor_mapped.Doctor_email}</p>
-              <p>
+              <p className="mb-1">
+                📧 Email: {doctorMapping.doctor_mapped.Doctor_email}
+              </p>
+              <p className="mb-1">
                 🗓️ Appointment Day:{" "}
                 {doctorMapping.doctor_mapped["Day of Appointment"]}
               </p>{" "}
-              <p>
+              <p className="mb-1">
                 ⏰ Duration:{" "}
                 {doctorMapping.doctor_mapped["Appointment Duration"]} minutes
               </p>{" "}
-              <p>📂 Department: {doctorMapping.patient_department}</p>
+              <p className="mb-1">
+                📂 Department: {doctorMapping.patient_department}
+              </p>
             </div>
           )}
         </div>
@@ -361,19 +367,30 @@ export default function MedForm({ userId }: { userId: string }, docId: any) {
                 >
                   Choose the Department
                 </label>
-                <select
-                  name="department"
-                  id="department"
-                  className="px-3 w-min py-2.5 border h-auto bg-transparent bg-white opacity-80 border-gray-200 hover:border-gray-300 dark:text-gray-300 outline-none dark:hover:border-gray-700 transition-all shadow-sm dark:border-gray-800 dark:bg-gray-900 rounded-xl"
-                  value={department}
-                  onChange={(e) => setDepartment(e.target.value)}
-                >
-                  {departments.map((dept) => (
-                    <option key={dept} value={dept}>
-                      {dept}
-                    </option>
-                  ))}
-                </select>
+                <div className="relative inline-block w-min">
+                  <select
+                    name="department"
+                    id="department"
+                    className="block cursor-pointer hover:bg-slate-300 appearance-none w-min bg-white border border-gray-200 hover:border-gray-300 dark:text-gray-300 outline-none dark:hover:border-gray-700 transition-all shadow-sm dark:border-gray-800 dark:bg-gray-900 rounded-xl px-3 py-2.5 pr-10"
+                    value={department}
+                    onChange={(e) => setDepartment(e.target.value)}
+                  >
+                    {departments.map((dept) => (
+                      <option key={dept} value={dept}>
+                        {dept}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg
+                      className="fill-current h-4 w-4"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M7 10l5 5 5-5H7z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
             </>
           )}
@@ -394,7 +411,7 @@ export default function MedForm({ userId }: { userId: string }, docId: any) {
               <h3 className="text-xl font-semibold pb-4 my-4 border-gray-300 border-b">
                 It sounds like you've been going through a lot. {""}To ensure I
                 have all the information I need to best assist you, I have a
-                couple more questions.
+                couple more questions based on your answers.
               </h3>
               {renderFollowUpQuestions()}
             </div>
@@ -403,22 +420,22 @@ export default function MedForm({ userId }: { userId: string }, docId: any) {
           {/* reports upload */}
 
           {followUpQuestions.length === 0 && (
-            <div className="py-2">
-              <label htmlFor={`reports`} className="font-medium pt-4 pb-1">
+            <div className="py-2 mt-2">
+              <label htmlFor={`reports`} className="font-medium pt-4 pb-1 mr-4">
                 Upload Reports
               </label>
               <input
                 type="file"
                 name={`reports`}
                 id={`reports`}
-                className="px-3 py-2.5 border h-auto bg-transparent bg-white w-full opacity-80 border-gray-200"
+                className="px-3 w-md flex justify-center mt-4 py-2.5 cursor-pointer hover:bg-slate-300 border h-auto bg-transparent bg-white opacity-80 border-gray-200 hover:border-gray-300 dark:text-gray-300 outline-none dark:hover:border-gray-700 transition-all shadow-sm dark:border-gray-800 dark:bg-gray-900 rounded-xl"
               />
             </div>
           )}
 
           <button
             type="submit"
-            className="bg-blue-500 my-10 text-white px-4 py-2 rounded"
+            className="p-4 mt-8 w-full bg-blue-600 hover:bg-blue-800 tracking-wide text-center rounded-2xl text-white shadow-xl hover:shadow-2xl ring-1 ring-blue-700 transition-all"
           >
             Submit
           </button>

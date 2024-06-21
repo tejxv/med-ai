@@ -1,14 +1,14 @@
 const links = [
-  { name: "Doctor friendly", href: "#" },
-  { name: "Internship program", href: "#" },
-  { name: "Our values", href: "#" },
-  { name: "Meet our leadership", href: "#" },
+  { name: "AI-Powered Diagnosis", href: "#" },
+  { name: "Streamlined Efficiency", href: "#" },
+  { name: "High Safety and Precision", href: "#" },
+  { name: "Reviewed by doctors", href: "#" },
 ]
 const stats = [
-  { name: "Offices worldwide", value: "12" },
-  { name: "Full-time colleagues", value: "300+" },
-  { name: "Hours per week", value: "40" },
-  { name: "Paid time off", value: "Unlimited" },
+  { name: "Google", value: "Gemini" },
+  { name: "Microsoft", value: "Phi-2 and 3" },
+  { name: "Google", value: "Google Embeddings" },
+  { name: "Google", value: "Google@Instruct-XL" },
 ]
 export default function Header() {
   return (
@@ -60,7 +60,7 @@ export default function Header() {
           <div className="grid grid-cols-1 gap-x-8 gap-y-6 text-base font-semibold leading-7 text-white sm:grid-cols-2 md:flex lg:gap-x-10">
             {links.map((link) => (
               <a key={link.name} href={link.href}>
-                {link.name} <span aria-hidden="true">&rarr;</span>
+                {link.name} <span aria-hidden="true"></span>
               </a>
             ))}
           </div>

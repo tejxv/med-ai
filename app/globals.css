@@ -35,8 +35,22 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+.report>ul {
+  padding-top: 20px;
+}
+
+.report>ul>li {
+  padding: 20px 20px;
+}
+
+.report>ul>li:nth-child(odd) {
+  background-color: #20ce6016;
+  border-radius: 10px;
 }
