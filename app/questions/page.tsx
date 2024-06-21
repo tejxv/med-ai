@@ -1,10 +1,10 @@
-'use client'
-import QuestionnaireComponent from '@/components/QuestionnaireComponent'
+"use client"
+import QuestionnaireComponent from "@/components/QuestionnaireComponent"
 
 export default function Questions() {
   const handleSubmit = (responses: { question: string; answer: string }[]) => {
     console.log(JSON.stringify(responses))
-    alert('Success! Check console for JSON output.')
+    alert("Success! Check console for JSON output.")
     // You can handle the JSON output here, e.g., sending it to an API
   }
 
@@ -16,16 +16,16 @@ export default function Questions() {
           {/* <QuestionnaireComponent onSubmit={handleSubmit} /> */}
         </main>
       </div>
-      <footer className="w-full border-t border-t-foreground/10 p-8 flex justify-center text-center text-xs">
+      <footer className="w-full border-t bg-white border-t-foreground/10 p-8 flex justify-center text-center text-xs">
         <p>
-          Precision Care Challenge · Developed by{' '}
+          Precision Care Challenge · Developed by{" "}
           <a
             href="#"
             target="_blank"
             className="font-bold hover:underline"
             rel="noreferrer"
           >
-            The Team
+            Code for Cure
           </a>
         </p>
       </footer>

@@ -5,7 +5,7 @@ export default function DeployButton() {
       href="/"
       rel="noreferrer"
     >
-      Med-AI
+      THRIVE
     </a>
   )
 }
