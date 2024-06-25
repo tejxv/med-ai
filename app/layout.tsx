@@ -30,7 +30,15 @@ export default function RootLayout({
             <p>
               We won the Precision Care Challenge hosted by GE Healthcare and
               secured the first position and this project has been set into
-              quarantine mode and won't be updated anymore.
+              quarantine mode and won't be updated anymore.{" "}
+              <a
+                href="https://github.com/tejxv/med-ai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                Check it out on GitHub
+              </a>
             </p>
           </div>
           <Nav />
